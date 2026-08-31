@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FoodGo Malta | Lazzu Go</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #e85d04;
+      --primary-dark: #d00000;
+      --primary-light: #f48c06;
+      --accent: #faa307;
+      --bg: #fff8f0;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #6b7280;
+      --success: #2d6a4f;
+      --border: #f0e6d8;
+      --shadow: 0 4px 20px rgba(232, 93, 4, 0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .hidden { display: none !important; }
+    .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white; padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+    .logo span { color: var(--accent); }
+    .header-actions { display: flex; gap: 12px; align-items: center; }
+    .icon-btn {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; position: relative;
+    }
+    .cart-badge {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--accent); color: #000; font-size: 0.7rem;
+      font-weight: 700; width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Search & Filters */
+    .search-bar {
+      padding: 16px; background: white;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-input {
+      width: 100%; padding: 12px 16px 12px 44px;
+      border: 2px solid var(--border); border-radius: 30px;
+      font-size: 0.95rem; background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%236b7280' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") 14px center / 20px no-repeat;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--primary); }
+    .filters {
+      display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
+      border: 2px solid var(--border); background: white;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--primary); color: white; border-color: var(--primary);
+    }
+
+    /* Restaurant Cards */
+    .section-title { padding: 16px 16px 8px; font-size: 1.25rem; }
+    .resto-list { display: flex; flex-direction: column; gap: 16px; padding: 0 16px 24px; }
+    .resto-card {
+      background: var(--card); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow);
+      cursor: pointer; transition: transform 0.2s;
+    }
+    .resto-card:active { transform: scale(0.98); }
+    .resto-img {
+      height: 140px; background-size: cover; background-position: center;
+      position: relative;
+    }
+    .resto-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(0,0,0,0.7); color: white;
+      padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
+    }
+    .resto-info { padding: 14px; }
+    .resto-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+    .resto-meta { display: flex; gap: 12px; font-size: 0.8rem; color: var(--text-muted); }
+    .resto-meta span { display: flex; align-items: center; gap: 4px; }
+
+    /* Menu */
+    .menu-header {
+      background: linear-gradient(to bottom, transparent 40%, var(--bg));
+      padding: 20px 16px; position: relative;
+    }
+    .back-btn {
+      background: white; border: none; width: 40px; height: 40px;
+      border-radius: 50%; box-shadow: var(--shadow); cursor: pointer;
+      font-size: 1.2rem; margin-bottom: 12px;
+    }
+    .menu-items { padding: 0 16px 100px; display: flex; flex-direction: column; gap: 12px; }
+    .dish-card {
+      background: white; border-radius: var(--radius-sm);
+      padding: 14px; display: flex; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .dish-img {
+      width: 80px; height: 80px; border-radius: 12px;
+      background-size: cover; background-position: center; flex-shrink: 0;
+    }
+    .dish-info { flex: 1; }
+    .dish-name { font-weight: 600; margin-bottom: 4px; }
+    .dish-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+    .dish-price { font-weight: 700; color: var(--primary); font-size: 1.05rem; }
+    .add-btn {
+      background: var(--primary); color: white; border: none;
+      padding: 8px 14px; border-radius: 20px; font-weight: 600;
+      font-size: 0.85rem; cursor: pointer; margin-top: 6px;
+    }
+    .add-btn:active { background: var(--primary-dark); }
+
+    /* Customisation Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 200; display: flex; align-items: flex-end;
+      justify-content: center;
+    }
+    .modal {
+      background: white; border-radius: 24px 24px 0 0;
+      width: 100%; max-width: 480px; max-height: 85vh;
+      overflow-y: auto; padding: 24px 20px 32px;
+    }
+    .modal h3 { margin-bottom: 16px; }
+    .option-group { margin-bottom: 20px; }
+    .option-group label { display: block; font-weight: 600; margin-bottom: 8px; }
+    .option-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .option-row:last-child { border-bottom: none; }
+    .qty-ctrl {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .qty-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--primary); background: white;
+      color: var(--primary); font-weight: 700; cursor: pointer;
+    }
+    .modal-footer {
+      position: sticky; bottom: 0; background: white;
+      padding-top: 16px; border-top: 1px solid var(--border);
+      display: flex; gap: 12px; margin-top: 16px;
+    }
+    .btn-primary {
+      flex: 1; background: var(--primary); color: white;
+      border: none; padding: 14px; border-radius: 30px;
+      font-weight: 600; font-size: 1rem; cursor: pointer;
+    }
+    .btn-secondary {
+      flex: 1; background: white; color: var(--primary);
+      border: 2px solid var(--primary); padding: 14px;
+      border-radius: 30px; font-weight: 600; cursor: pointer;
+    }
+
+    /* Cart */
+    .cart-item {
+      background: white; border-radius: var(--radius-sm);
+      padding: 14px; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: 600; }
+    .cart-item-mods { font-size: 0.8rem; color: var(--text-muted); margin: 4px 0; }
+    .cart-summary {
+      background: white; border-radius: var(--radius);
+      padding: 20px; margin: 16px 0; box-shadow: var(--shadow);
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      margin-bottom: 10px; font-size: 0.95rem;
+    }
+    .summary-row.total {
+      font-size: 1.2rem; font-weight: 700; color: var(--primary);
+      border-top: 2px solid var(--border); padding-top: 12px; margin-top: 8px;
+    }
+
+    /* Forms */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 0.9rem; }
+    .form-control {
+      width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 0.95rem; outline: none;
+    }
+    .form-control:focus { border-color: var(--primary); }
+    select.form-control { appearance: none; background: white; }
+
+    /* Payment options */
+    .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .pay-option {
+      border: 2px solid var(--border); border-radius: var(--radius-sm);
+      padding: 12px; text-align: center; cursor: pointer;
+      font-weight: 500; font-size: 0.9rem; transition: all 0.2s;
+    }
+    .pay-option.selected {
+      border-color: var(--primary); background: #fff5eb;
+      color: var(--primary);
+    }
+
+    /* Tracking */
+    .tracking-card {
+      background: white; border-radius: var(--radius);
+      padding: 24px; margin: 16px; box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .status-steps {
+      display: flex; justify-content: space-between;
+      margin: 24px 0; position: relative;
+    }
+    .status-steps::before {
+      content: ''; position: absolute; top: 14px; left: 10%; right: 10%;
+      height: 3px; background: var(--border); z-index: 0;
+    }
+    .step {
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 1; flex: 1;
+    }
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--border); margin-bottom: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: white; font-weight: 700;
+    }
+    .step.done .step-dot { background: var(--success); }
+    .step.active .step-dot { background: var(--primary); animation: pulse 1.5s infinite; }
+    .step-label { font-size: 0.7rem; color: var(--text-muted); text-align: center; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .map-sim {
+      height: 180px; background: linear-gradient(180deg, #a8dadc 0%, #457b9d 100%);
+      border-radius: var(--radius-sm); position: relative; overflow: hidden;
+      margin: 16px 0;
+    }
+    .courier {
+      position: absolute; font-size: 2rem;
+      transition: left 0.5s ease, top 0.5s ease;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    .eta {
+      font-size: 1.8rem; font-weight: 700; color: var(--primary);
+      margin: 8px 0;
+    }
+
+    /* Auth */
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 20px; }
+    .auth-tab {
+      flex: 1; padding: 12px; text-align: center; cursor: pointer;
+      border-bottom: 3px solid transparent; font-weight: 600;
+    }
+    .auth-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+    .role-select { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .role-chip {
+      padding: 8px 14px; border-radius: 20px; border: 2px solid var(--border);
+      cursor: pointer; font-size: 0.85rem;
+    }
+    .role-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Dashboards */
+    .dash-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: white; border-radius: var(--radius-sm);
+      padding: 16px; text-align: center; box-shadow: var(--shadow);
+    }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+    .order-row {
+      background: white; border-radius: var(--radius-sm);
+      padding: 14px; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .order-actions { display: flex; gap: 8px; }
+    .btn-sm {
+      padding: 6px 12px; border-radius: 16px; border: none;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-accept { background: var(--success); color: white; }
+    .btn-reject { background: #dc2626; color: white; }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: white; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around; padding: 10px 0;
+      z-index: 90; max-width: 480px; margin: 0 auto;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      font-size: 0.7rem; color: var(--text-muted); cursor: pointer;
+      background: none; border: none; gap: 2px;
+    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item span { font-size: 1.3rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: #1a1a1a; color: white; padding: 12px 24px;
+      border-radius: 30px; font-size: 0.9rem; z-index: 300;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+
+    /* Empty state */
+    .empty { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+    .empty span { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+    /* Demo accounts hint */
+    .demo-hint {
+      background: #fff5eb; border: 1px dashed var(--primary);
+      border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Food<span>Go</span> Malta</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btnAccount" title="Account">👤</button>
+      <button class="icon-btn" id="btnCart" title="Cart">
+        🛒 <span class="cart-badge hidden" id="cartBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-view="home"><span>🏠</span>Home</button>
+    <button class="nav-item" data-view="cart"><span>🛒</span>Cart</button>
+    <button class="nav-item" data-view="orders"><span>📦</span>Orders</button>
+    <button class="nav-item" data-view="account"><span>👤</span>Account</button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ========== SAMPLE DATA ==========
+    const RESTAURANTS = [
+      {
+        id: 'r1', name: 'Pizza Paradise', category: 'Pizza', town: 'Valletta',
+        rating: 4.8, deliveryFee: 2.50, time: '25-35 min',
+        img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd1', name: 'Margherita', desc: 'Tomato, mozzarella, basil', price: 9.50, img: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=200&h=200&fit=crop',
+            options: [{ name: 'Extra cheese', price: 1.50 }, { name: 'Olives', price: 1.00 }, { name: 'No basil', price: 0 }] },
+          { id: 'd2', name: 'Pepperoni Feast', desc: 'Double pepperoni & mozzarella', price: 12.00, img: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&h=200&fit=crop',
+            options: [{ name: 'Extra pepperoni', price: 2.00 }, { name: 'Jalapeños', price: 1.00 }] },
+          { id: 'd3', name: 'Maltese Special', desc: 'Sausage, sun-dried tomatoes, goats cheese', price: 13.50, img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop', options: [] },
+          { id: 'd4', name: 'BBQ Chicken', desc: 'Chicken, BBQ sauce, red onion', price: 12.50, img: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=200&h=200&fit=crop', options: [{ name: 'Extra chicken', price: 2.50 }] },
+          { id: 'd5', name: 'Veggie Garden', desc: 'Peppers, mushrooms, olives, corn', price: 11.00, img: 'https://images.unsplash.com/photo-1511689660979-10d9db3b1bdf?w=200&h=200&fit=crop', options: [] },
+          { id: 'd6', name: 'Garlic Bread', desc: 'With cheese', price: 4.50, img: 'https://images.unsplash.com/photo-1573140401552-3fab57d0b0a0?w=200&h=200&fit=crop', options: [] },
+        ]
+      },
+      {
+        id: 'r2', name: 'Burger Bay', category: 'Burgers', town: 'Sliema',
+        rating: 4.6, deliveryFee: 2.00, time: '20-30 min',
+        img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd7', name: 'Classic Beef', desc: 'Angus beef, lettuce, tomato, special sauce', price: 10.50, img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=200&h=200&fit=crop',
+            options: [{ name: 'Extra patty', price: 3.50 }, { name: 'Bacon', price: 1.80 }, { name: 'Cheese', price: 1.00 }] },
+          { id: 'd8', name: 'Chicken Crunch', desc: 'Crispy chicken, coleslaw, mayo', price: 9.80, img: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=200&h=200&fit=crop', options: [{ name: 'Spicy mayo', price: 0.50 }] },
+          { id: 'd9', name: 'Maltese Rabbit Burger', desc: 'Slow-cooked rabbit, local herbs', price: 14.00, img: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=200&h=200&fit=crop', options: [] },
+          { id: 'd10', name: 'Veggie Stack', desc: 'Plant-based patty, avocado, sprouts', price: 11.00, img: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?w=200&h=200&fit=crop', options: [] },
+          { id: 'd11', name: 'Fries', desc: 'Crispy golden fries', price: 3.50, img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&h=200&fit=crop', options: [{ name: 'Cheese sauce', price: 1.20 }] },
+          { id: 'd12', name: 'Onion Rings', desc: 'Beer-battered', price: 4.00, img: 'https://images.unsplash.com/photo-1639024471283-035266009349?w=200&h=200&fit=crop', options: [] },
+        ]
+      },
+      {
+        id: 'r3', name: 'Maltese Kitchen', category: 'Maltese', town: 'Birkirkara',
+        rating: 4.9, deliveryFee: 2.80, time: '30-40 min',
+        img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd13', name: 'Fenek (Rabbit)', desc: 'Traditional Maltese rabbit stew', price: 16.50, img: 'https://images.unsplash.com/photo-1544025162-d766902fdf0a?w=200&h=200&fit=crop', options: [] },
+          { id: 'd14', name: 'Pastizzi (3pcs)', desc: 'Ricotta or pea-filled pastries', price: 4.50, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=200&h=200&fit=crop',
+            options: [{ name: 'Ricotta', price: 0 }, { name: 'Pea', price: 0 }] },
+          { id: 'd15', name: 'Lampuki Pie', desc: 'Seasonal fish pie', price: 13.00, img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop', options: [] },
+          { id: 'd16', name: 'Bragioli', desc: 'Beef olives in rich sauce', price: 15.00, img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=200&h=200&fit=crop', options: [] },
+          { id: 'd17', name: 'Aljotta', desc: 'Traditional fish soup', price: 8.50, img: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop', options: [] },
+          { id: 'd18', name: 'Kannoli', desc: 'Sweet ricotta filled pastry', price: 5.00, img: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop', options: [] },
+        ]
+      },
+      {
+        id: 'r4', name: 'Sushi Wave', category: 'Sushi', town: "St. Julian's",
+        rating: 4.7, deliveryFee: 3.00, time: '25-40 min',
+        img: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd19', name: 'Salmon Nigiri (4pcs)', desc: 'Fresh Atlantic salmon', price: 9.00, img: 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&h=200&fit=crop', options: [] },
+          { id: 'd20', name: 'California Roll', desc: 'Crab, avocado, cucumber', price: 8.50, img: 'https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=200&h=200&fit=crop', options: [{ name: 'Extra avocado', price: 1.50 }] },
+          { id: 'd21', name: 'Spicy Tuna Roll', desc: 'Tuna, spicy mayo, sesame', price: 10.00, img: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=200&h=200&fit=crop', options: [] },
+          { id: 'd22', name: 'Dragon Roll', desc: 'Eel, avocado, cucumber', price: 13.50, img: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=200&h=200&fit=crop', options: [] },
+          { id: 'd23', name: 'Miso Soup', desc: 'Traditional', price: 3.50, img: 'https://images.unsplash.com/photo-1607302383313-e6e3c8e0e0e0?w=200&h=200&fit=crop', options: [] },
+          { id: 'd24', name: 'Edamame', desc: 'Salted soy beans', price: 4.00, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=200&h=200&fit=crop', options: [] },
+        ]
+      },
+      {
+        id: 'r5', name: 'Healthy Bowls Co.', category: 'Healthy', town: 'Mosta',
+        rating: 4.5, deliveryFee: 2.20, time: '20-30 min',
+        img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd25', name: 'Mediterranean Bowl', desc: 'Quinoa, hummus, olives, feta, greens', price: 11.50, img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop',
+            options: [{ name: 'Extra feta', price: 1.50 }, { name: 'Grilled chicken', price: 3.00 }] },
+          { id: 'd26', name: 'Poke Bowl', desc: 'Salmon, rice, edamame, avocado', price: 13.00, img: 'https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?w=200&h=200&fit=crop', options: [] },
+          { id: 'd27', name: 'Green Goddess', desc: 'Kale, broccoli, avocado, seeds', price: 10.00, img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop', options: [] },
+          { id: 'd28', name: 'Protein Power', desc: 'Chicken, sweet potato, spinach', price: 12.50, img: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&h=200&fit=crop', options: [] },
+          { id: 'd29', name: 'Smoothie Bowl', desc: 'Acai, banana, berries, granola', price: 8.50, img: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200&h=200&fit=crop', options: [] },
+          { id: 'd30', name: 'Fresh Juice', desc: 'Orange / Green detox', price: 4.50, img: 'https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=200&h=200&fit=crop', options: [] },
+        ]
+      },
+      {
+        id: 'r6', name: 'Sweet Treats', category: 'Desserts', town: 'Valletta',
+        rating: 4.8, deliveryFee: 1.80, time: '15-25 min',
+        img: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&h=300&fit=crop',
+        menu: [
+          { id: 'd31', name: 'Chocolate Lava Cake', desc: 'Warm with vanilla ice cream', price: 7.50, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=200&h=200&fit=crop', options: [] },
+          { id: 'd32', name: 'Tiramisu', desc: 'Classic Italian style', price: 6.50, img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=200&h=200&fit=crop', options: [] },
+          { id: 'd33', name: 'Maltese Helwa', desc: 'Traditional sesame sweet', price: 5.00, img: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop', options: [] },
+          { id: 'd34', name: 'Cheesecake Slice', desc: 'New York style', price: 6.00, img: 'https://images.unsplash.com/photo-1533134242443-d3be9059e2c0?w=200&h=200&fit=crop', options: [] },
+          { id: 'd35', name: 'Ice Cream Scoop', desc: 'Local gelato - 2 scoops', price: 4.50, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&h=200&fit=crop',
+            options: [{ name: 'Vanilla', price: 0 }, { name: 'Chocolate', price: 0 }, { name: 'Strawberry', price: 0 }] },
+          { id: 'd36', name: 'Brownie Box', desc: '4 mini brownies', price: 8.00, img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=200&h=200&fit=crop', options: [] },
+        ]
+      }
+    ];
+
+    const TOWNS = ['Valletta', 'Sliema', "St. Julian's", 'Birkirkara', 'Mosta', 'Msida', 'Gzira', 'Paola', 'Qormi', 'Hamrun'];
+    const CATEGORIES = ['All', 'Pizza', 'Burgers', 'Maltese', 'Sushi', 'Healthy', 'Desserts'];
+    const SERVICE_CHARGE_RATE = 0.05; // 5%
+
+    // ========== STATE ==========
+    let state = {
+      view: 'home',
+      filter: 'All',
+      search: '',
+      currentResto: null,
+      cart: JSON.parse(localStorage.getItem('fg_cart') || '[]'),
+      user: JSON.parse(localStorage.getItem('fg_user') || 'null'),
+      orders: JSON.parse(localStorage.getItem('fg_orders') || '[]'),
+      customising: null,
+      selectedOptions: {},
+      customQty: 1,
+      paymentMethod: 'Card',
+      deliveryTown: 'Valletta',
+      deliveryTime: 'ASAP',
+      scheduledDate: '',
+      scheduledTime: '',
+      trackingOrder: null,
+      trackingStep: 0,
+      etaMinutes: 35
+    };
+
+    // ========== HELPERS ==========
+    function save() {
+      localStorage.setItem('fg_cart', JSON.stringify(state.cart));
+      localStorage.setItem('fg_user', JSON.stringify(state.user));
+      localStorage.setItem('fg_orders', JSON.stringify(state.orders));
+    }
+
+    function formatEUR(n) {
+      return '€' + n.toFixed(2);
+    }
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function cartCount() {
+      return state.cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    function cartSubtotal() {
+      return state.cart.reduce((s, i) => s + i.lineTotal, 0);
+    }
+
+    function getDeliveryFee() {
+      if (!state.cart.length) return 0;
+      const resto = RESTAURANTS.find(r => r.id === state.cart[0].restoId);
+      return resto ? resto.deliveryFee : 2.50;
+    }
+
+    function getServiceCharge() {
+      return cartSubtotal() * SERVICE_CHARGE_RATE;
+    }
+
+    function getTotal() {
+      return cartSubtotal() + getDeliveryFee() + getServiceCharge();
+    }
+
+    // ========== RENDER ==========
+    function render() {
+      const app = document.getElementById('app');
+      updateBadge();
+
+      document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', n.dataset.view === state.view ||
+          (state.view === 'restaurant' && n.dataset.view === 'home') ||
+          (state.view === 'checkout' && n.dataset.view === 'cart') ||
+          (state.view === 'tracking' && n.dataset.view === 'orders'));
+      });
+
+      if (state.view === 'home') app.innerHTML = renderHome();
+      else if (state.view === 'restaurant') app.innerHTML = renderRestaurant();
+      else if (state.view === 'cart') app.innerHTML = renderCart();
+      else if (state.view === 'checkout') app.innerHTML = renderCheckout();
+      else if (state.view === 'tracking') app.innerHTML = renderTracking();
+      else if (state.view === 'orders') app.innerHTML = renderOrders();
+      else if (state.view === 'account') app.innerHTML = renderAccount();
+      else if (state.view === 'owner') app.innerHTML = renderOwnerDash();
+      else if (state.view === 'admin') app.innerHTML = renderAdminDash();
+      else if (state.view === 'auth') app.innerHTML = renderAuth();
+
+      if (state.customising) showCustomModal();
+      bindEvents();
+    }
+
+    function updateBadge() {
+      const badge = document.getElementById('cartBadge');
+      const c = cartCount();
+      badge.textContent = c;
+      badge.classList.toggle('hidden', c === 0);
+    }
+
+    function renderHome() {
+      let list = RESTAURANTS.filter(r => {
+        const matchCat = state.filter === 'All' || r.category === state.filter;
+        const matchSearch = !state.search ||
+          r.name.toLowerCase().includes(state.search.toLowerCase()) ||
+          r.category.toLowerCase().includes(state.search.toLowerCase()) ||
+          r.town.toLowerCase().includes(state.search.toLowerCase());
+        return matchCat && matchSearch;
+      });
+
+      return `
+        <div class="search-bar">
+          <input class="search-input" id="searchInput" placeholder="Search restaurants, cuisine, town..." value="${state.search}" />
+        </div>
+        <div class="filters">
+          ${CATEGORIES.map(c => `<button class="filter-chip ${state.filter === c ? 'active' : ''}" data-filter="${c}">${c}</button>`).join('')}
+        </div>
+        <h2 class="section-title">Restaurants near you</h2>
+        <div class="resto-list">
+          ${list.length ? list.map(r => `
+            <div class="resto-card" data-resto="${r.id}">
+              <div class="resto-img" style="background-image:url('${r.img}')">
+                <span class="resto-badge">${r.category}</span>
+              </div>
+              <div class="resto-info">
+                <div class="resto-name">${r.name}</div>
+                <div class="resto-meta">
+                  <span>⭐ ${r.rating}</span>
+                  <span>🕒 ${r.time}</span>
+                  <span>📍 ${r.town}</span>
+                  <span>🛵 ${formatEUR(r.deliveryFee)}</span>
+                </div>
+              </div>
+            </div>
+          `).join('') : '<div class="empty"><span>🔍</span>No restaurants found</div>'}
+        </div>
+      `;
+    }
+
+    function renderRestaurant() {
+      const r = state.currentResto;
+      if (!r) return '';
+      return `
+        <div class="menu-header">
+          <button class="back-btn" id="backHome">←</button>
+          <div class="resto-img" style="height:160px;border-radius:var(--radius);background-image:url('${r.img}');margin-bottom:12px;"></div>
+          <h2>${r.name}</h2>
+          <div class="resto-meta" style="margin-top:6px;">
+            <span>⭐ ${r.rating}</span>
+            <span>🕒 ${r.time}</span>
+            <span>📍 ${r.town}</span>
+            <span>Delivery ${formatEUR(r.deliveryFee)}</span>
+          </div>
+        </div>
+        <div class="menu-items">
+          ${r.menu.map(d => `
+            <div class="dish-card">
+              <div class="dish-img" style="background-image:url('${d.img}')"></div>
+              <div class="dish-info">
+                <div class="dish-name">${d.name}</div>
+                <div class="dish-desc">${d.desc}</div>
+                <div class="dish-price">${formatEUR(d.price)}</div>
+                <button class="add-btn" data-dish="${d.id}">+ Add</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderCart() {
+      if (!state.cart.length) {
+        return `<div class="empty"><span>🛒</span>Your cart is empty<br><button class="btn-primary" style="margin-top:16px;width:auto;padding:12px 32px;" id="goHome">Browse restaurants</button></div>`;
+      }
+      return `
+        <div class="container" style="padding-top:16px;">
+          <h2 class="section-title" style="padding-left:0;">Your Cart</h2>
+          ${state.cart.map((item, idx) => `
+            <div class="cart-item">
+              <div class="cart-item-info">
+                <div class="cart-item-name">${item.name} × ${item.qty}</div>
+                <div class="cart-item-mods">${item.mods.length ? item.mods.join(', ') : 'No extras'}</div>
+                <div class="dish-price">${formatEUR(item.lineTotal)}</div>
+              </div>
+              <div class="qty-ctrl">
+                <button class="qty-btn" data-cart-dec="${idx}">−</button>
+                <span>${item.qty}</span>
+                <button class="qty-btn" data-cart-inc="${idx}">+</button>
+              </div>
+            </div>
+          `).join('')}
+          <div class="cart-summary">
+            <div class="summary-row"><span>Subtotal</span><span>${formatEUR(cartSubtotal())}</span></div>
+            <div class="summary-row"><span>Delivery</span><span>${formatEUR(getDeliveryFee())}</span></div>
+            <div class="summary-row"><span>Service (5%)</span><span>${formatEUR(getServiceCharge())}</span></div>
+            <div class="summary-row total"><span>Total</span><span>${formatEUR(getTotal())}</span></div>
+          </div>
+          <button class="btn-primary" id="goCheckout" style="width:100%;">Proceed to Checkout</button>
+        </div>
+      `;
+    }
+
+    function renderCheckout() {
+      return `
+        <div class="container" style="padding-top:16px;padding-bottom:40px;">
+          <h2 class="section-title" style="padding-left:0;">Checkout</h2>
+          <div class="form-group">
+            <label>Delivery Address (Town)</label>
+            <select class="form-control" id="deliveryTown">
+              ${TOWNS.map(t => `<option value="${t}" ${state.deliveryTown === t ? 'selected' : ''}>${t}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Street / Building (optional)</label>
+            <input class="form-control" id="street" placeholder="e.g. 12 Republic Street" />
+          </div>
+          <div class="form-group">
+            <label>Delivery Time</label>
+            <select class="form-control" id="deliveryTime">
+              <option value="ASAP" ${state.deliveryTime === 'ASAP' ? 'selected' : ''}>ASAP</option>
+              <option value="Scheduled" ${state.deliveryTime === 'Scheduled' ? 'selected' : ''}>Schedule for later</option>
+            </select>
+          </div>
+          <div id="scheduleFields" class="${state.deliveryTime === 'Scheduled' ? '' : 'hidden'}">
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" class="form-control" id="schedDate" value="${state.scheduledDate}" />
+            </div>
+            <div class="form-group">
+              <label>Time</label>
+              <input type="time" class="form-control" id="schedTime" value="${state.scheduledTime}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="payment-options">
+              ${['Card', 'Apple Pay', 'Google Pay', 'PayPal', 'Cash on Delivery'].map(p => `
+                <div class="pay-option ${state.paymentMethod === p ? 'selected' : ''}" data-pay="${p}">${p}</div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="cart-summary">
+            <div class="summary-row"><span>Subtotal</span><span>${formatEUR(cartSubtotal())}</span></div>
+            <div class="summary-row"><span>Delivery</span><span>${formatEUR(getDeliveryFee())}</span></div>
+            <div class="summary-row"><span>Service</span><span>${formatEUR(getServiceCharge())}</span></div>
+            <div class="summary-row total"><span>Total</span><span>${formatEUR(getTotal())}</span></div>
+          </div>
+          <button class="btn-primary" id="placeOrder" style="width:100%;">Place Order · ${formatEUR(getTotal())}</button>
+        </div>
+      `;
+    }
+
+    function renderTracking() {
+      const o = state.trackingOrder;
+      if (!o) return '<div class="empty">No active order</div>';
+      const steps = ['Placed', 'Accepted', 'Courier', 'On the Way', 'Delivered'];
+      const stepIdx = state.trackingStep;
+      return `
+        <div class="tracking-card">
+          <h2>Order #${o.id.slice(-6)}</h2>
+          <p style="color:var(--text-muted);margin:8px 0;">${o.restoName}</p>
+          <div class="eta">${state.etaMinutes} min</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">Estimated arrival</p>
+          <div class="map-sim">
+            <div class="courier" id="courierIcon" style="left:${10 + stepIdx * 18}%;top:40%;">🛵</div>
+            <div style="position:absolute;bottom:10px;left:10px;font-size:1.5rem;">🏠</div>
+            <div style="position:absolute;bottom:10px;right:10px;font-size:1.5rem;">📍</div>
+          </div>
+          <div class="status-steps">
+            ${steps.map((s, i) => `
+              <div class="step ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'active' : ''}">
+                <div class="step-dot">${i < stepIdx ? '✓' : i + 1}</div>
+                <div class="step-label">${s}</div>
+              </div>
+            `).join('')}
+          </div>
+          <p style="font-size:0.9rem;margin-top:12px;">${o.items.map(i => i.name + ' ×' + i.qty).join(', ')}</p>
+          <p style="font-weight:600;margin-top:8px;">${formatEUR(o.total)}</p>
+        </div>
+      `;
+    }
+
+    function renderOrders() {
+      if (!state.user) {
+        return `<div class="empty"><span>🔒</span>Please log in to see orders<br><button class="btn-primary" style="margin-top:16px;width:auto;padding:12px 32px;" id="goAuth">Login</button></div>`;
+      }
+      const myOrders = state.orders.filter(o => o.userId === state.user.id).reverse();
+      if (!myOrders.length) return `<div class="empty"><span>📦</span>No orders yet</div>`;
+      return `
+        <div class="container" style="padding-top:16px;">
+          <h2 class="section-title" style="padding-left:0;">Order History</h2>
+          ${myOrders.map(o => `
+            <div class="order-row">
+              <div>
+                <div style="font-weight:600;">#${o.id.slice(-6)} · ${o.restoName}</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">${o.status} · ${formatEUR(o.total)}</div>
+              </div>
+              <div class="order-actions">
+                ${o.status !== 'Delivered' ? `<button class="btn-sm btn-accept" data-track="${o.id}">Track</button>` : ''}
+                <button class="btn-sm" style="background:var(--primary);color:white;" data-reorder="${o.id}">Reorder</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderAccount() {
+      if (!state.user) {
+        return `
+          <div class="container" style="padding-top:24px;">
+            <div class="demo-hint">
+              <strong>Demo accounts:</strong><br>
+              customer@demo.com / demo123<br>
+              owner@demo.com / demo123<br>
+              admin@demo.com / demo123
+            </div>
+            <button class="btn-primary" id="goAuth" style="width:100%;">Login / Register</button>
+          </div>
+        `;
+      }
+      return `
+        <div class="container" style="padding-top:24px;">
+          <h2>Hi, ${state.user.name}!</h2>
+          <p style="color:var(--text-muted);margin:8px 0 20px;">Role: ${state.user.role}</p>
+          ${state.user.role === 'owner' ? `<button class="btn-primary" id="goOwner" style="width:100%;margin-bottom:12px;">Restaurant Dashboard</button>` : ''}
+          ${state.user.role === 'admin' ? `<button class="btn-primary" id="goAdmin" style="width:100%;margin-bottom:12px;">Admin Dashboard</button>` : ''}
+          <button class="btn-secondary" id="logout" style="width:100%;">Logout</button>
+        </div>
+      `;
+    }
+
+    function renderAuth() {
+      return `
+        <div class="container" style="padding-top:24px;">
+          <div class="auth-tabs">
+            <div class="auth-tab active" data-auth="login">Login</div>
+            <div class="auth-tab" data-auth="register">Register</div>
+          </div>
+          <div class="demo-hint">
+            Demo: customer@demo.com / owner@demo.com / admin@demo.com<br>Password: demo123
+          </div>
+          <div id="authForm">
+            <div class="form-group"><label>Email</label><input type="email" class="form-control" id="authEmail" placeholder="you@example.com" /></div>
+            <div class="form-group"><label>Password</label><input type="password" class="form-control" id="authPass" placeholder="••••••" /></div>
+            <div class="form-group hidden" id="nameGroup"><label>Name</label><input class="form-control" id="authName" placeholder="Your name" /></div>
+            <div class="form-group hidden" id="roleGroup">
+              <label>Role</label>
+              <div class="role-select">
+                <div class="role-chip active" data-role="customer">Customer</div>
+                <div class="role-chip" data-role="owner">Restaurant Owner</div>
+                <div class="role-chip" data-role="admin">Admin</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="authSubmit" style="width:100%;">Login</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOwnerDash() {
+      const pending = state.orders.filter(o => o.status === 'Order Placed' || o.status === 'Restaurant Accepted');
+      return `
+        <div class="container" style="padding-top:16px;">
+          <h2 class="section-title" style="padding-left:0;">Owner Dashboard</h2>
+          <div class="dash-stats">
+            <div class="stat-card"><div class="stat-value">${pending.length}</div><div class="stat-label">Pending</div></div>
+            <div class="stat-card"><div class="stat-value">${state.orders.filter(o => o.status === 'Delivered').length}</div><div class="stat-label">Completed</div></div>
+          </div>
+          <h3 style="margin-bottom:12px;">Incoming Orders</h3>
+          ${pending.length ? pending.map(o => `
+            <div class="order-row">
+              <div>
+                <div style="font-weight:600;">#${o.id.slice(-6)} · ${o.town}</div>
+                <div style="font-size:0.8rem;">${o.items.map(i => i.name).join(', ')} · ${formatEUR(o.total)}</div>
+              </div>
+              <div class="order-actions">
+                ${o.status === 'Order Placed' ? `
+                  <button class="btn-sm btn-accept" data-accept="${o.id}">Accept</button>
+                  <button class="btn-sm btn-reject" data-reject="${o.id}">Reject</button>
+                ` : `<span style="font-size:0.8rem;color:var(--success);">Accepted</span>`}
+              </div>
+            </div>
+          `).join('') : '<p style="color:var(--text-muted);">No pending orders</p>'}
+          <button class="btn-secondary" id="backAccount" style="width:100%;margin-top:20px;">← Back</button>
+        </div>
+      `;
+    }
+
+    function renderAdminDash() {
+      const totalSales = state.orders.reduce((s, o) => s + (o.status === 'Delivered' ? o.total : 0), 0);
+      return `
+        <div class="container" style="padding-top:16px;">
+          <h2 class="section-title" style="padding-left:0;">Admin Dashboard</h2>
+          <div class="dash-stats">
+            <div class="stat-card"><div class="stat-value">${state.orders.length}</div><div class="stat-label">Total Orders</div></div>
+            <div class="stat-card"><div class="stat-value">${formatEUR(totalSales)}</div><div class="stat-label">Sales</div></div>
+            <div class="stat-card"><div class="stat-value">${RESTAURANTS.length}</div><div class="stat-label">Restaurants</div></div>
+            <div class="stat-card"><div class="stat-value">${state.orders.filter(o => o.status !== 'Delivered' && o.status !== 'Rejected').length}</div><div class="stat-label">Active</div></div>
+          </div>
+          <h3 style="margin-bottom:12px;">All Orders</h3>
+          ${state.orders.slice().reverse().map(o => `
+            <div class="order-row">
+              <div>
+                <div style="font-weight:600;">#${o.id.slice(-6)} · ${o.restoName}</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">${o.status} · ${o.town} · ${formatEUR(o.total)}</div>
+              </div>
+            </div>
+          `).join('') || '<p style="color:var(--text-muted);">No orders yet</p>'}
+          <button class="btn-secondary" id="backAccount" style="width:100%;margin-top:20px;">← Back</button>
+        </div>
+      `;
+    }
+
+    function showCustomModal() {
+      const dish = state.customising;
+      if (!dish) return;
+      const existing = document.getElementById('customModal');
+      if (existing) existing.remove();
+
+      let optsHtml = '';
+      if (dish.options && dish.options.length) {
+        optsHtml = `<div class="option-group"><label>Customise</label>
+          ${dish.options.map((o, i) => `
+            <div class="option-row">
+              <span>${o.name} ${o.price > 0 ? `(+${formatEUR(o.price)})` : ''}</span>
+              <input type="checkbox" data-opt="${i}" ${state.selectedOptions[i] ? 'checked' : ''} />
+            </div>
+          `).join('')}
+        </div>`;
+      }
+
+      const extra = Object.keys(state.selectedOptions).reduce((s, k) => {
+        if (state.selectedOptions[k] && dish.options[k]) return s + dish.options[k].price;
+        return s;
+      }, 0);
+      const line = (dish.price + extra) * state.customQty;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.id = 'customModal';
+      overlay.innerHTML = `
+        <div class="modal">
+          <h3>${dish.name}</h3>
+          <p style="color:var(--text-muted);margin-bottom:16px;">${dish.desc}</p>
+          ${optsHtml}
+          <div class="option-group">
+            <label>Quantity</label>
+            <div class="qty-ctrl">
+              <button class="qty-btn" id="modQtyDec">−</button>
+              <span id="modQty">${state.customQty}</span>
+              <button class="qty-btn" id="modQtyInc">+</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" id="cancelCustom">Cancel</button>
+            <button class="btn-primary" id="confirmAdd">Add · ${formatEUR(line)}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      overlay.querySelectorAll('[data-opt]').forEach(cb => {
+        cb.addEventListener('change', e => {
+          state.selectedOptions[e.target.dataset.opt] = e.target.checked;
+          showCustomModal();
+        });
+      });
+      document.getElementById('modQtyDec').onclick = () => {
+        if (state.customQty > 1) { state.customQty--; showCustomModal(); }
+      };
+      document.getElementById('modQtyInc').onclick = () => { state.customQty++; showCustomModal(); };
+      document.getElementById('cancelCustom').onclick = () => {
+        state.customising = null;
+        overlay.remove();
+      };
+      document.getElementById('confirmAdd').onclick = () => {
+        const mods = [];
+        let extraPrice = 0;
+        if (dish.options) {
+          dish.options.forEach((o, i) => {
+            if (state.selectedOptions[i]) {
+              mods.push(o.name);
+              extraPrice += o.price;
+            }
+          });
+        }
+        const unit = dish.price + extraPrice;
+        state.cart.push({
+          dishId: dish.id,
+          restoId: state.currentResto.id,
+          restoName: state.currentResto.name,
+          name: dish.name,
+          qty: state.customQty,
+          unitPrice: unit,
+          lineTotal: unit * state.customQty,
+          mods
+        });
+        save();
+        state.customising = null;
+        overlay.remove();
+        toast('Added to cart');
+        updateBadge();
+      };
+    }
+
+    function bindEvents() {
+      const search = document.getElementById('searchInput');
+      if (search) {
+        search.oninput = e => { state.search = e.target.value; render(); };
+      }
+
+      document.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.onclick = () => { state.filter = btn.dataset.filter; render(); };
+      });
+
+      document.querySelectorAll('[data-resto]').forEach(card => {
+        card.onclick = () => {
+          state.currentResto = RESTAURANTS.find(r => r.id === card.dataset.resto);
+          state.view = 'restaurant';
+          render();
+        };
+      });
+
+      const back = document.getElementById('backHome');
+      if (back) back.onclick = () => { state.view = 'home'; render(); };
+
+      document.querySelectorAll('[data-dish]').forEach(btn => {
+        btn.onclick = e => {
+          e.stopPropagation();
+          const dish = state.currentResto.menu.find(d => d.id === btn.dataset.dish);
+          state.customising = dish;
+          state.selectedOptions = {};
+          state.customQty = 1;
+          showCustomModal();
+        };
+      });
+
+      document.querySelectorAll('[data-cart-inc]').forEach(btn => {
+        btn.onclick = () => {
+          const i = +btn.dataset.cartInc;
+          state.cart[i].qty++;
+          state.cart[i].lineTotal = state.cart[i].unitPrice * state.cart[i].qty;
+          save(); render();
+        };
+      });
+      document.querySelectorAll('[data-cart-dec]').forEach(btn => {
+        btn.onclick = () => {
+          const i = +btn.dataset.cartDec;
+          if (state.cart[i].qty > 1) {
+            state.cart[i].qty--;
+            state.cart[i].lineTotal = state.cart[i].unitPrice * state.cart[i].qty;
+          } else {
+            state.cart.splice(i, 1);
+          }
+          save(); render();
+        };
+      });
+
+      document.getElementById('goCheckout')?.addEventListener('click', () => {
+        if (!state.user) { state.view = 'auth'; render(); toast('Please login first'); return; }
+        state.view = 'checkout'; render();
+      });
+      document.getElementById('goHome')?.addEventListener('click', () => { state.view = 'home'; render(); });
+      document.getElementById('goAuth')?.addEventListener('click', () => { state.view = 'auth'; render(); });
+      document.getElementById('goOwner')?.addEventListener('click', () => { state.view = 'owner'; render(); });
+      document.getElementById('goAdmin')?.addEventListener('click', () => { state.view = 'admin'; render(); });
+      document.getElementById('backAccount')?.addEventListener('click', () => { state.view = 'account'; render(); });
+      document.getElementById('logout')?.addEventListener('click', () => {
+        state.user = null; save(); state.view = 'account'; render(); toast('Logged out');
+      });
+
+      document.getElementById('deliveryTown')?.addEventListener('change', e => state.deliveryTown = e.target.value);
+      document.getElementById('deliveryTime')?.addEventListener('change', e => {
+        state.deliveryTime = e.target.value;
+        document.getElementById('scheduleFields')?.classList.toggle('hidden', e.target.value !== 'Scheduled');
+      });
+      document.querySelectorAll('[data-pay]').forEach(el => {
+        el.onclick = () => {
+          state.paymentMethod = el.dataset.pay;
+          document.querySelectorAll('[data-pay]').forEach(p => p.classList.toggle('selected', p.dataset.pay === state.paymentMethod));
+        };
+      });
+
+      document.getElementById('placeOrder')?.addEventListener('click', placeOrder);
+
+      document.querySelectorAll('[data-track]').forEach(btn => {
+        btn.onclick = () => {
+          const o = state.orders.find(x => x.id === btn.dataset.track);
+          if (o) startTracking(o);
+        };
+      });
+      document.querySelectorAll('[data-reorder]').forEach(btn => {
+        btn.onclick = () => {
+          const o = state.orders.find(x => x.id === btn.dataset.reorder);
+          if (o) {
+            state.cart = o.items.map(i => ({ ...i }));
+            save(); state.view = 'cart'; render(); toast('Items added to cart');
+          }
+        };
+      });
+
+      document.querySelectorAll('[data-accept]').forEach(btn => {
+        btn.onclick = () => {
+          const o = state.orders.find(x => x.id === btn.dataset.accept);
+          if (o) { o.status = 'Restaurant Accepted'; save(); render(); toast('Order accepted'); }
+        };
+      });
+      document.querySelectorAll('[data-reject]').forEach(btn => {
+        btn.onclick = () => {
+          const o = state.orders.find(x => x.id === btn.dataset.reject);
+          if (o) { o.status = 'Rejected'; save(); render(); toast('Order rejected'); }
+        };
+      });
+
+      document.querySelectorAll('[data-auth]').forEach(tab => {
+        tab.onclick = () => {
+          document.querySelectorAll('[data-auth]').forEach(t => t.classList.toggle('active', t === tab));
+          const isReg = tab.dataset.auth === 'register';
+          document.getElementById('nameGroup')?.classList.toggle('hidden', !isReg);
+          document.getElementById('roleGroup')?.classList.toggle('hidden', !isReg);
+          document.getElementById('authSubmit').textContent = isReg ? 'Register' : 'Login';
+        };
+      });
+      document.querySelectorAll('[data-role]').forEach(chip => {
+        chip.onclick = () => {
+          document.querySelectorAll('[data-role]').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+        };
+      });
+      document.getElementById('authSubmit')?.addEventListener('click', handleAuth);
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.onclick = () => {
+        state.view = item.dataset.view;
+        render();
+      };
+    });
+    document.getElementById('btnCart').onclick = () => { state.view = 'cart'; render(); };
+    document.getElementById('btnAccount').onclick = () => { state.view = 'account'; render(); };
+
+    function placeOrder() {
+      if (!state.cart.length) return;
+      const order = {
+        id: 'ord_' + Date.now(),
+        userId: state.user.id,
+        restoId: state.cart[0].restoId,
+        restoName: state.cart[0].restoName,
+        items: state.cart.map(i => ({ ...i })),
+        subtotal: cartSubtotal(),
+        deliveryFee: getDeliveryFee(),
+        serviceCharge: getServiceCharge(),
+        total: getTotal(),
+        town: state.deliveryTown,
+        street: document.getElementById('street')?.value || '',
+        deliveryTime: state.deliveryTime,
+        scheduled: state.deliveryTime === 'Scheduled' ? (document.getElementById('schedDate')?.value + ' ' + document.getElementById('schedTime')?.value) : null,
+        payment: state.paymentMethod,
+        status: 'Order Placed',
+        createdAt: new Date().toISOString()
+      };
+      state.orders.push(order);
+      state.cart = [];
+      save();
+      toast('Order placed!');
+      startTracking(order);
+    }
+
+    function startTracking(order) {
+      state.trackingOrder = order;
+      state.trackingStep = 0;
+      state.etaMinutes = 35;
+      state.view = 'tracking';
+      render();
+
+      const statuses = ['Order Placed', 'Restaurant Accepted', 'Courier Assigned', 'On the Way', 'Delivered'];
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        if (step >= statuses.length) {
+          clearInterval(interval);
+          return;
+        }
+        state.trackingStep = step;
+        state.etaMinutes = Math.max(5, 35 - step * 7);
+        order.status = statuses[step];
+        save();
+        if (state.view === 'tracking') render();
+      }, 4000);
+    }
+
+    function handleAuth() {
+      const email = document.getElementById('authEmail')?.value.trim();
+      const pass = document.getElementById('authPass')?.value;
+      const isReg = document.querySelector('[data-auth].active')?.dataset.auth === 'register';
+
+      if (!email || !pass) { toast('Fill all fields'); return; }
+
+      const demos = {
+        'customer@demo.com': { id: 'u1', name: 'Maria Borg', role: 'customer', email },
+        'owner@demo.com': { id: 'u2', name: 'Joe Camilleri', role: 'owner', email },
+        'admin@demo.com': { id: 'u3', name: 'Admin User', role: 'admin', email }
+      };
+
+      if (isReg) {
+        const name = document.getElementById('authName')?.value || 'User';
+        const role = document.querySelector('[data-role].active')?.dataset.role || 'customer';
+        state.user = { id: 'u_' + Date.now(), name, role, email };
+        save();
+        toast('Account created!');
+        state.view = 'account';
+        render();
+      } else {
+        if (demos[email] && pass === 'demo123') {
+          state.user = demos[email];
+          save();
+          toast('Welcome back!');
+          state.view = 'account';
+          render();
+        } else if (pass === 'demo123') {
+          state.user = { id: 'u_' + Date.now(), name: email.split('@')[0], role: 'customer', email };
+          save();
+          toast('Logged in!');
+          state.view = 'account';
+          render();
+        } else {
+          toast('Invalid credentials (use demo123)');
+        }
+      }
+    }
+
+    // Init
+    render();
+  </script>
+</body>
+</html>
